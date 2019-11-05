@@ -23,6 +23,8 @@ public class MainWindow extends Application
             Scene scene = new Scene(root, 400, 400);
 
             primaryStage.setScene(scene);
+            primaryStage.setMaxHeight(1080);
+            primaryStage.setMaxWidth(1920);
             primaryStage.setTitle("Snake Game");
 
             primaryStage.show();
