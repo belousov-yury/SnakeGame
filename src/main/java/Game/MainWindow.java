@@ -35,4 +35,8 @@ public class MainWindow extends Application
         }
 
     }
+
+    public void exitGame()
+    {
+    }
 }
