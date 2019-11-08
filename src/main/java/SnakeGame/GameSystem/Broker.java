@@ -5,6 +5,7 @@ import SnakeGame.GameSystem.Enums.EnumRequest;
 import SnakeGame.GameSystem.Interfases.IObservable;
 import SnakeGame.GameSystem.Interfases.IObserver;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,16 +49,17 @@ public class Broker implements IObservable
     @Override
     public void notifyObservers(EnumAddressName name, EnumRequest enumRequest)
     {
+        var observerList = getObserverList();
         if(name == EnumAddressName.All)
         {
-            for(IObserver a: observers)
+            for(IObserver a: observerList)
             {
                 a.notification(enumRequest);
             }
         }
         else
         {
-            for(IObserver a: observers)
+            for(IObserver a: observerList)
             {
                 if(a.getName() == name)
                 {
@@ -65,5 +67,9 @@ public class Broker implements IObservable
                 }
             }
         }
+    }
+    private List<IObserver> getObserverList()
+    {
+        return List.copyOf(observers);
     }
 }

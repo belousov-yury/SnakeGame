@@ -32,7 +32,7 @@ public class MainWindow extends Application implements IObserver
     }
 
     @Override
-    public void start(Stage stage) throws Exception
+    public void start(Stage stage)
     {
         try
         {
@@ -57,22 +57,45 @@ public class MainWindow extends Application implements IObserver
 
     }
 
-    public void startGame() throws IOException
+    public void startGame()
     {
-        Parent root = FXMLLoader.load(getClass().getResource("/GameFXML.fxml"));
+        Parent root = null;
+        try
+        {
+            root = FXMLLoader.load(getClass().getResource("/GameFXML.fxml"));
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
 
         Scene scene = new Scene(root, 1920, 1080);
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Snake SnakeGame.Game");
+        primaryStage.setTitle("Snake Game");
 
-        broker.notifyObservers(EnumRequest.THE_GAME_IS_RUNNING);
+        broker.notifyObservers(EnumAddressName.All, EnumRequest.THE_GAME_IS_RUNNING);
+    }
+    public void exitGame()
+    {
+        primaryStage.close();
+        broker = null;
     }
 
-
     @Override
-    public void notification(EnumRequest enumRequest) throws IOException
+    public void notification(EnumRequest enumRequest)
     {
+        switch(enumRequest)
+        {
+            case START_THE_GAME:
+                startGame();
+                break;
+            case EXIT_THE_GAME:
+                exitGame();
+                break;
+            case THE_GAME_IS_RUNNING:
+                break;
+        }
         if(enumRequest == EnumRequest.START_THE_GAME)
         {
             startGame();
@@ -80,9 +103,9 @@ public class MainWindow extends Application implements IObserver
     }
 
     @Override
-    public void setName(EnumAddressName name)
+    public EnumAddressName getName()
     {
-        this.name = name;
+        return name;
     }
 
 

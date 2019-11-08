@@ -3,7 +3,8 @@ package SnakeGame.GameSystem.Enums;
 public enum EnumAddressName
 {
     All,
-    Controller,
+    MainWindowController,
+    GameWindowController,
     MainWindow
 
 }
