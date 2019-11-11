@@ -5,6 +5,7 @@ public enum EnumAddressName
     All,
     MainWindowController,
     GameWindowController,
-    MainWindow
+    MainWindow,
+    GameModel
 
 }

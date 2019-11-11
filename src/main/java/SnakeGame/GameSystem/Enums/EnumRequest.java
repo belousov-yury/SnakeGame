@@ -4,5 +4,6 @@ public enum EnumRequest
 {
     START_THE_GAME,
     EXIT_THE_GAME,
-    THE_GAME_IS_RUNNING
+    THE_GAME_IS_RUNNING,
+    SCENE_UPDATE
 }

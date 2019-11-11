@@ -1,5 +1,6 @@
 package SnakeGame.GameSystem;
 
+import SnakeGame.Game.GameModel;
 import SnakeGame.GameSystem.Enums.EnumAddressName;
 import SnakeGame.GameSystem.Enums.EnumRequest;
 import SnakeGame.GameSystem.Interfases.IObservable;
@@ -46,6 +47,8 @@ public class MainWindow extends Application implements IObserver
             primaryStage.setMaxHeight(1080);
             primaryStage.setMaxWidth(1920);
             primaryStage.setTitle("Snake SnakeGame.Game");
+            primaryStage.centerOnScreen();
+
 
             primaryStage.show();
 
@@ -71,8 +74,12 @@ public class MainWindow extends Application implements IObserver
 
         Scene scene = new Scene(root, 1920, 1080);
 
+
+
         primaryStage.setScene(scene);
         primaryStage.setTitle("Snake Game");
+        primaryStage.centerOnScreen();
+
 
         broker.notifyObservers(EnumAddressName.All, EnumRequest.THE_GAME_IS_RUNNING);
     }
@@ -95,10 +102,6 @@ public class MainWindow extends Application implements IObserver
                 break;
             case THE_GAME_IS_RUNNING:
                 break;
-        }
-        if(enumRequest == EnumRequest.START_THE_GAME)
-        {
-            startGame();
         }
     }
 
