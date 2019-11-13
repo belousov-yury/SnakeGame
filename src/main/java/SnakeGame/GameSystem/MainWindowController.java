@@ -6,10 +6,7 @@ import SnakeGame.GameSystem.Interfases.IObservable;
 import SnakeGame.GameSystem.Interfases.IObserver;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-
-import java.io.IOException;
 
 public class MainWindowController implements IObserver
 {
@@ -42,8 +39,6 @@ public class MainWindowController implements IObserver
     {
         switch(enumRequest)
         {
-            case SCENE_UPDATE:
-                break;
             case THE_GAME_IS_RUNNING:
                 broker.removeObserver(this);
                 broker = null;

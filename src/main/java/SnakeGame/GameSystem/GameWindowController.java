@@ -1,32 +1,40 @@
 package SnakeGame.GameSystem;
 
-import SnakeGame.Game.GameModel;
 import SnakeGame.GameSystem.Enums.EnumAddressName;
 import SnakeGame.GameSystem.Enums.EnumRequest;
 import SnakeGame.GameSystem.Interfases.IObservable;
 import SnakeGame.GameSystem.Interfases.IObserver;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 
 public class GameWindowController implements IObserver
 {
     @FXML
     Pane pane;
 
+    @FXML
+    VBox vbox;
+
+    @FXML
+    MenuItem Go;
+
     private EnumAddressName name;
     private IObservable broker;
-    private GameModel gameModel;
+    FrameDraw frameDraw;
 
     public GameWindowController()
     {
         name = EnumAddressName.GameWindowController;
         broker = Broker.getInstance();
         broker.registerObserver(this);
-        gameModel = new GameModel((int)pane.getHeight(), (int)pane.getWidth());
-        //        box.getChildren().add(new Button("Hello"));
+        frameDraw = new FrameDraw();
     }
+
 
     @FXML
     public void exitGame(ActionEvent actionEvent)
@@ -44,12 +52,23 @@ public class GameWindowController implements IObserver
                 break;
             case THE_GAME_IS_RUNNING:
                 break;
+
         }
     }
 
+
+
     public void updateScene()
     {
-
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run()
+            {
+                vbox.getChildren().remove(pane);
+                pane = frameDraw.getFrame();
+                vbox.getChildren().add(pane);
+            }
+        });
     }
 
     @Override
@@ -57,4 +76,14 @@ public class GameWindowController implements IObserver
     {
         return name;
     }
+
+    @FXML
+    public void goGame(ActionEvent actionEvent)
+    {
+        Go.setDisable(true);
+        broker.notifyObservers(EnumAddressName.GameModel, EnumRequest.GO_GAME);
+    }
+
+
+
 }

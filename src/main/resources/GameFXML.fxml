@@ -2,28 +2,31 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0"
-      xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="SnakeGame.GameSystem.GameWindowController" fx:id = "pane">
+<VBox minHeight="400" minWidth="400" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SnakeGame.GameSystem.GameWindowController" fx:id="vbox" >
    <children>
 
-      <MenuBar prefHeight="29.0" prefWidth="1920">
+       <MenuBar>
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-              <MenuItem fx:id="exitItem" mnemonicParsing="false" onAction="#exitGame" text="Exit" />
+                <MenuItem mnemonicParsing="false" onAction="#goGame" text="Go" fx:id="Go"/>
+                <MenuItem mnemonicParsing="false" onAction="#exitGame" text="Exit" />
             </items>
-          </Menu>
-
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" text="About" />
-            </items>
-          </Menu>
+            </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                </items>
+            </Menu>
         </menus>
       </MenuBar>
 
+       <Pane VBox.vgrow="ALWAYS" fx:id="pane" >
+         <children>
 
+         </children>
+       </Pane>
    </children>
-</Pane>
+</VBox>

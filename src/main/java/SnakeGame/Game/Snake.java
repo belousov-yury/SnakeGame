@@ -30,9 +30,9 @@ public class Snake implements ISnake
         allSnakePartCoordinate = new ArrayList<Point>();
         allSnakePartCoordinate.add(startCoordinate);
 
-        while(allSnakePartCoordinate.size() < 3)
+        while(allSnakePartCoordinate.size() < 100)
         {
-            allSnakePartCoordinate.add(new Point((int)allSnakePartCoordinate.get(allSnakePartCoordinate.size()).getX() + 1, (int)allSnakePartCoordinate.get(allSnakePartCoordinate.size()).getY()));
+            allSnakePartCoordinate.add(new Point((int)allSnakePartCoordinate.get(allSnakePartCoordinate.size() - 1).getX() + 1, (int)allSnakePartCoordinate.get(allSnakePartCoordinate.size() - 1).getY()));
         }
 
         updateSnakeSize();
@@ -73,6 +73,16 @@ public class Snake implements ISnake
 
         allSnakePartCoordinate.get(0).x += x;
         allSnakePartCoordinate.get(0).y += y;
+    }
+
+    public boolean crossingCheck()
+    {
+        for(int i = 1; i < snakeSize; i ++)
+        {
+            return allSnakePartCoordinate.get(i).equals(allSnakePartCoordinate.get(0));
+        }
+
+        return false;
     }
 
     private void updateSnakeSize()

@@ -1,14 +1,18 @@
 package SnakeGame.GameSystem;
 
 import SnakeGame.Game.GameModel;
+import SnakeGame.Game.MyTimerTask;
 import SnakeGame.GameSystem.Enums.EnumAddressName;
 import SnakeGame.GameSystem.Enums.EnumRequest;
 import SnakeGame.GameSystem.Interfases.IObservable;
 import SnakeGame.GameSystem.Interfases.IObserver;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -24,6 +28,7 @@ public class MainWindow extends Application implements IObserver
         name = EnumAddressName.MainWindow;
         broker = Broker.getInstance();
         broker.registerObserver(this);
+
     }
 
 
@@ -72,9 +77,30 @@ public class MainWindow extends Application implements IObserver
             e.printStackTrace();
         }
 
-        Scene scene = new Scene(root, 1920, 1080);
-
-
+        Scene scene = new Scene(root);
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>()
+        {
+            @Override
+            public void handle(KeyEvent event)
+            {
+                KeyCode key = event.getCode();
+                switch(key)
+                {
+                  case UP:
+                      broker.notifyObservers(EnumAddressName.GameModel, EnumRequest.KEY_UP);
+                      break;
+                  case DOWN:
+                      broker.notifyObservers(EnumAddressName.GameModel, EnumRequest.KEY_DOWN);
+                      break;
+                  case RIGHT:
+                      broker.notifyObservers(EnumAddressName.GameModel, EnumRequest.KEY_RIGHT);
+                      break;
+                  case LEFT:
+                      broker.notifyObservers(EnumAddressName.GameModel, EnumRequest.KEY_LEFT);
+                      break;
+}
+            }
+        });
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Snake Game");
