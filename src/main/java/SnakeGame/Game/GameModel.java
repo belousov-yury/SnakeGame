@@ -6,8 +6,10 @@ import SnakeGame.GameSystem.Enums.EnumAddressName;
 import SnakeGame.GameSystem.Enums.EnumRequest;
 import SnakeGame.GameSystem.Interfases.IObservable;
 import SnakeGame.GameSystem.Interfases.IObserver;
+import javafx.scene.paint.Color;
+import javafx.application.Platform;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Random;
 import java.util.List;
 
@@ -24,7 +26,12 @@ public class GameModel implements IObserver
     private GameField gameField;
 
     private Food food;
+
     private MyTimerTask timer;
+
+    private int speedGame;
+
+    private boolean gameOver = false;
 
 
     public GameModel()
@@ -32,10 +39,8 @@ public class GameModel implements IObserver
         name = EnumAddressName.GameModel;
         broker = Broker.getInstance();
         broker.registerObserver(this);
-        direction = EnumDirection.LEFT;
-        gameField = new GameField(400,400);
-        snake = new Snake(new Point(gameField.getFieldWidth()/2,gameField.getFieldHeight()/2));
-        food = new Food(foodCoordinateCalculate());
+        gameField = new GameField(18,18);
+
     }
 
     @Override
@@ -68,13 +73,13 @@ public class GameModel implements IObserver
 
     public void goGame()
     {
-        timer = new MyTimerTask();
-        timer.goGame();
-    }
-
-    public void gameOver()
-    {
-        broker.notifyObservers(EnumAddressName.All, EnumRequest.GAME_OVER);
+        gameOver = false;
+        direction = EnumDirection.LEFT;
+        snake = new Snake(new Point(gameField.getFieldWidth()/2,gameField.getFieldHeight()/2));
+        food = new Food(foodCoordinateCalculate());
+        speedGame = 200;
+        timer = new MyTimerTask(speedGame);
+        timer.goGame(timer);
     }
 
     public void nextStepCalculate()
@@ -82,16 +87,35 @@ public class GameModel implements IObserver
         snakeMovement();
         if(snake.crossingCheck())
         {
-            gameOver();
+            gameOver = true;
+        }
+
+        if(snake.getSnakeHeadCoordinate().getX() > gameField.getFieldWidth() || snake.getSnakeHeadCoordinate().getX() < 0 ||
+                snake.getSnakeHeadCoordinate().getY() > gameField.getFieldHeight() || snake.getSnakeHeadCoordinate().getY() < 0)
+        {
+            gameOver = true;
         }
 
         if(snake.getSnakeHeadCoordinate().equals(food.getFoodCoordinate()))
         {
             snake.addSnakePart();
+
             food.setFoodCoordinate(foodCoordinateCalculate());
+
+            speedGame -= 5;
+
+            timer.setSpeed(speedGame);
         }
 
-        broker.notifyObservers(EnumAddressName.GameWindowController, EnumRequest.SCENE_UPDATE);
+        if(gameOver == false)
+        {
+            broker.notifyObservers(EnumAddressName.GameWindowController, EnumRequest.SCENE_UPDATE);
+        }
+        else
+        {
+            broker.notifyObservers(EnumAddressName.All, EnumRequest.GAME_OVER);
+            timer.gameOver();
+        }
     }
 
     public void changeDirection(EnumDirection direction)
@@ -187,8 +211,22 @@ public class GameModel implements IObserver
     {
         return snake.getAllSnakePartCoordinate();
     }
-    public Point getFood()
+    public Point getFoodCoordinate()
     {
         return food.getFoodCoordinate();
+    }
+    public Color getFoodColor()
+    {
+        return food.getColor();
+    }
+
+    public int getFieldHeight()
+    {
+        return gameField.getFieldHeight();
+    }
+
+    public int getFieldWidth()
+    {
+        return gameField.getFieldWidth();
     }
 }

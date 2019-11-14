@@ -50,25 +50,35 @@ public class GameWindowController implements IObserver
             case SCENE_UPDATE:
                 updateScene();
                 break;
-            case THE_GAME_IS_RUNNING:
+            case GAME_OVER:
+                gameOver();
+
                 break;
 
         }
     }
 
-
-
-    public void updateScene()
+    private void gameOver()
     {
+        Go.setDisable(false);
         Platform.runLater(new Runnable() {
             @Override
             public void run()
             {
                 vbox.getChildren().remove(pane);
-                pane = frameDraw.getFrame();
+                pane = frameDraw.getGameOverFrame();
                 vbox.getChildren().add(pane);
             }
         });
+
+    }
+
+    public void updateScene()
+    {
+        vbox.getChildren().remove(pane);
+                pane = frameDraw.getFrame();
+                vbox.getChildren().add(pane);
+
     }
 
     @Override

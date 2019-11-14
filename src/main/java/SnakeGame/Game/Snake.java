@@ -30,7 +30,7 @@ public class Snake implements ISnake
         allSnakePartCoordinate = new ArrayList<Point>();
         allSnakePartCoordinate.add(startCoordinate);
 
-        while(allSnakePartCoordinate.size() < 100)
+        while(allSnakePartCoordinate.size() < 3)
         {
             allSnakePartCoordinate.add(new Point((int)allSnakePartCoordinate.get(allSnakePartCoordinate.size() - 1).getX() + 1, (int)allSnakePartCoordinate.get(allSnakePartCoordinate.size() - 1).getY()));
         }
@@ -66,20 +66,22 @@ public class Snake implements ISnake
     @Override
     public void movement(int x, int y)
     {
-        for(int i = 1; i < snakeSize - 1; i ++)
+        for(int i = snakeSize - 1; i > 0; i --)
         {
-            allSnakePartCoordinate.set(i + 1, allSnakePartCoordinate.get(i));
+            allSnakePartCoordinate.get(i).setLocation(allSnakePartCoordinate.get(i - 1));
         }
-
-        allSnakePartCoordinate.get(0).x += x;
-        allSnakePartCoordinate.get(0).y += y;
+        Point point = new Point((int)allSnakePartCoordinate.get(0).getX() + x, (int)allSnakePartCoordinate.get(0).getY() + y);
+        allSnakePartCoordinate.get(0).setLocation(point);
     }
 
     public boolean crossingCheck()
     {
         for(int i = 1; i < snakeSize; i ++)
         {
-            return allSnakePartCoordinate.get(i).equals(allSnakePartCoordinate.get(0));
+            if(allSnakePartCoordinate.get(i).getX() == allSnakePartCoordinate.get(0).getX() && allSnakePartCoordinate.get(i).getY() == allSnakePartCoordinate.get(0).getY())
+            {
+                return true;
+            }
         }
 
         return false;

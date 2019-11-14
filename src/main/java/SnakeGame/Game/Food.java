@@ -2,8 +2,9 @@ package SnakeGame.Game;
 
 import SnakeGame.Game.Interfaces.IFood;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.Random;
+import javafx.scene.paint.Color;
 
 public class Food implements IFood
 {
@@ -12,10 +13,8 @@ public class Food implements IFood
 
     public Food(Point point)
     {
-        Color[] colors = { Color.BLUE, Color.GREEN, Color.MAGENTA, Color.RED,
-                Color.CYAN };
-        Random random = new Random();
-        color = colors[random.nextInt(colors.length)];
+
+        color = generateColor();
 
         coordinate = point;
     }
@@ -29,7 +28,17 @@ public class Food implements IFood
     @Override
     public void setFoodCoordinate(Point coordinate)
     {
+        this.coordinate = coordinate;
+        this.color = generateColor();
+    }
 
+    private Color generateColor()
+    {
+        Color[] colors = { Color.BLUE, Color.GREEN, Color.MAGENTA, Color.RED, Color.CYAN };
+
+        Random random = new Random();
+
+        return colors[random.nextInt(colors.length)];
     }
 
     public Color getColor()

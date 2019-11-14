@@ -15,27 +15,49 @@ public class MyTimerTask extends TimerTask implements IObserver
     private EnumAddressName name;
     private IObservable broker;
     private Timer timer;
-    private TimerTask timerTask;
+    private int Speed;
+    MyTimerTask task;
+    public int getSpeed()
+    {
+        return Speed;
+    }
 
-    public MyTimerTask()
+    public void setSpeed(int speed)
+    {
+        if(Speed > 20)
+        {
+            Speed = speed;
+//            timer.cancel();
+//            timer.scheduleAtFixedRate(task, 0, Speed);
+        }
+    }
+
+    public MyTimerTask(int speed)
     {
         name = EnumAddressName.Timer;
         broker = Broker.getInstance();
         broker.registerObserver(this);
-
+        Speed = speed;
     }
 
     @Override
     public void run()
     {
-        broker.notifyObservers(EnumAddressName.GameModel,EnumRequest.NEXT_FRAME);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run()
+            {
+
+                broker.notifyObservers(EnumAddressName.GameModel,EnumRequest.NEXT_FRAME);
+            }
+        });
     }
 
-    public void goGame()
+    public void goGame(MyTimerTask timerTask)
     {
-        timerTask = new MyTimerTask();
+        task = timerTask;
         timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 100);
+        timer.scheduleAtFixedRate(task, 0, Speed);
     }
 
     @Override
@@ -43,8 +65,15 @@ public class MyTimerTask extends TimerTask implements IObserver
     {
         switch(enumRequest)
         {
-
+            case GAME_OVER:
+                gameOver();
+                break;
         }
+    }
+
+    public void gameOver()
+    {
+        timer.cancel();
     }
 
     @Override
