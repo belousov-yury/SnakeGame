@@ -25,12 +25,12 @@ public class Snake implements ISnake
     private List<Point> allSnakePartCoordinate;
 
 
-    public Snake(Point startCoordinate)
+    public Snake(Point startCoordinate, int size)
     {
         allSnakePartCoordinate = new ArrayList<Point>();
         allSnakePartCoordinate.add(startCoordinate);
 
-        while(allSnakePartCoordinate.size() < 3)
+        while(allSnakePartCoordinate.size() < size)
         {
             allSnakePartCoordinate.add(new Point((int)allSnakePartCoordinate.get(allSnakePartCoordinate.size() - 1).getX() + 1, (int)allSnakePartCoordinate.get(allSnakePartCoordinate.size() - 1).getY()));
         }
@@ -59,7 +59,7 @@ public class Snake implements ISnake
     @Override
     public void addSnakePart()
     {
-        allSnakePartCoordinate.add(new Point());
+        allSnakePartCoordinate.add(new Point(allSnakePartCoordinate.get(allSnakePartCoordinate.size() - 1)));
         updateSnakeSize();
     }
 

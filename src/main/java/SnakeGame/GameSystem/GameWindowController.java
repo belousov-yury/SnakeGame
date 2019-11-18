@@ -4,6 +4,8 @@ import SnakeGame.GameSystem.Enums.EnumAddressName;
 import SnakeGame.GameSystem.Enums.EnumRequest;
 import SnakeGame.GameSystem.Interfases.IObservable;
 import SnakeGame.GameSystem.Interfases.IObserver;
+import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,6 +13,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Ellipse;
+import javafx.util.Duration;
 
 public class GameWindowController implements IObserver
 {
@@ -65,9 +69,7 @@ public class GameWindowController implements IObserver
             @Override
             public void run()
             {
-                vbox.getChildren().remove(pane);
-                pane = frameDraw.getGameOverFrame();
-                vbox.getChildren().add(pane);
+                pane.getChildren().addAll(frameDraw.getGameOverFrame().getChildren());
             }
         });
 
@@ -75,9 +77,15 @@ public class GameWindowController implements IObserver
 
     public void updateScene()
     {
-        vbox.getChildren().remove(pane);
-                pane = frameDraw.getFrame();
-                vbox.getChildren().add(pane);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run()
+            {
+                pane.getChildren().clear();
+                pane.getChildren().addAll(frameDraw.getFrame().getChildren());
+//                frameDraw.getFrame(pane);
+            }
+        });
 
     }
 
@@ -91,6 +99,7 @@ public class GameWindowController implements IObserver
     public void goGame(ActionEvent actionEvent)
     {
         Go.setDisable(true);
+
         broker.notifyObservers(EnumAddressName.GameModel, EnumRequest.GO_GAME);
     }
 

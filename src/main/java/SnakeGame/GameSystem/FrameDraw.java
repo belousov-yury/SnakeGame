@@ -2,7 +2,10 @@ package SnakeGame.GameSystem;
 
 import SnakeGame.Game.GameModel;
 import SnakeGame.Game.Snake;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.paint.Color;
@@ -18,8 +21,8 @@ public class FrameDraw
     private GameModel gameModel;
     private List<Point> snakeCollection;
 
-    private int snakePartRadius = 7;
-    private double distanceBetweenPoints = 1.2;
+    private int snakePartRadius = 20;
+    private double distanceBetweenPoints = 1.5;
 
 
     public FrameDraw()
@@ -36,6 +39,17 @@ public class FrameDraw
 
         List<Ellipse> snake = new ArrayList<Ellipse>();
 
+        Rectangle field = new Rectangle(coordinateTransformation(gameModel.getFieldWidth()) + snakePartRadius, coordinateTransformation(gameModel.getFieldHeight()) + snakePartRadius);
+        field.setFill(Color.YELLOW);
+        pane.getChildren().add(field);
+
+        Ellipse food = new Ellipse(snakePartRadius, snakePartRadius);
+        food.setCenterX(coordinateTransformation(gameModel.getFoodCoordinate().getX()));
+        food.setCenterY(coordinateTransformation(gameModel.getFoodCoordinate().getY()));
+        food.setFill(gameModel.getFoodColor());
+
+        pane.getChildren().add(food);
+
         for(int i = 0; i < snakeCollection.size(); i ++)
         {
             Ellipse ell = new Ellipse(snakePartRadius,snakePartRadius);
@@ -45,21 +59,6 @@ public class FrameDraw
         }
 
         pane.getChildren().addAll(snake);
-
-        Ellipse food = new Ellipse(snakePartRadius, snakePartRadius);
-        food.setCenterX(coordinateTransformation(gameModel.getFoodCoordinate().getX()));
-        food.setCenterY(coordinateTransformation(gameModel.getFoodCoordinate().getY()));
-        food.setFill(gameModel.getFoodColor());
-
-        pane.getChildren().add(food);
-
-        Rectangle field = new Rectangle(gameModel.getFieldWidth(), gameModel.getFieldHeight());
-        field.setStyle("-fx-border-color: black;");
-        field.setFill(Color.YELLOW);
-
-        pane.getChildren().add(field);
-
-
         return pane;
     }
 
@@ -67,26 +66,13 @@ public class FrameDraw
     {
         Pane pane = new Pane();
 
-        List<Ellipse> snake = new ArrayList<Ellipse>();
-        for(Point a:gameModel.getSnake())
-        {
-            Ellipse ell = new Ellipse(4,4);
-            ell.setLayoutX(a.x);
-            ell.setLayoutY(a.y);
-            snake.add(ell);
-        }
-
-
-        pane.getChildren().addAll(snake);
-
         Text gameOver = new Text("GAME OVER");
         gameOver.setFont(new Font(44));
         gameOver.setLayoutX(70);
         gameOver.setLayoutY(170);
-        gameOver.setStyle("-fx-text-fill: red");
+        gameOver.setFill(Color.RED);
 
         pane.getChildren().add(gameOver);
-
         return pane;
     }
 

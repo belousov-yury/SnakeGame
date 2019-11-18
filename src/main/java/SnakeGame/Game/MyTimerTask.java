@@ -12,11 +12,13 @@ import java.util.TimerTask;
 
 public class MyTimerTask extends TimerTask implements IObserver
 {
+    private boolean updateSpeedCheck = false;
     private EnumAddressName name;
     private IObservable broker;
     private Timer timer;
     private int Speed;
     MyTimerTask task;
+
     public int getSpeed()
     {
         return Speed;
@@ -27,8 +29,8 @@ public class MyTimerTask extends TimerTask implements IObserver
         if(Speed > 20)
         {
             Speed = speed;
-//            timer.cancel();
-//            timer.scheduleAtFixedRate(task, 0, Speed);
+            updateSpeedCheck = true;
+
         }
     }
 
@@ -38,19 +40,29 @@ public class MyTimerTask extends TimerTask implements IObserver
         broker = Broker.getInstance();
         broker.registerObserver(this);
         Speed = speed;
+
     }
 
     @Override
     public void run()
     {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run()
-            {
+        if(updateSpeedCheck)
+        {
+            updateSpeed();
+        }
+        else
+        {
+            broker.notifyObservers(EnumAddressName.GameModel,EnumRequest.NEXT_FRAME);
+        }
+    }
 
-                broker.notifyObservers(EnumAddressName.GameModel,EnumRequest.NEXT_FRAME);
-            }
-        });
+    private void updateSpeed()
+    {
+        updateSpeedCheck = false;
+        timer.cancel();
+        timer = null;
+        task = null;
+
     }
 
     public void goGame(MyTimerTask timerTask)
@@ -65,15 +77,16 @@ public class MyTimerTask extends TimerTask implements IObserver
     {
         switch(enumRequest)
         {
-            case GAME_OVER:
-                gameOver();
-                break;
+
         }
     }
 
     public void gameOver()
     {
         timer.cancel();
+        timer = null;
+        task = null;
+        broker.removeObserver(this);
     }
 
     @Override

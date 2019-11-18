@@ -17,6 +17,8 @@ public class GameModel implements IObserver
 {
     IObservable broker;
 
+    private boolean movementCheck = true;
+
     private EnumAddressName name;
 
     private EnumDirection direction;
@@ -75,7 +77,7 @@ public class GameModel implements IObserver
     {
         gameOver = false;
         direction = EnumDirection.LEFT;
-        snake = new Snake(new Point(gameField.getFieldWidth()/2,gameField.getFieldHeight()/2));
+        snake = new Snake(new Point(gameField.getFieldWidth()/2,gameField.getFieldHeight()/2), gameField.getFieldWidth()/6);
         food = new Food(foodCoordinateCalculate());
         speedGame = 200;
         timer = new MyTimerTask(speedGame);
@@ -105,6 +107,9 @@ public class GameModel implements IObserver
             speedGame -= 5;
 
             timer.setSpeed(speedGame);
+            timer = new MyTimerTask(speedGame);
+            timer.goGame(timer);
+
         }
 
         if(gameOver == false)
@@ -113,43 +118,51 @@ public class GameModel implements IObserver
         }
         else
         {
-            broker.notifyObservers(EnumAddressName.All, EnumRequest.GAME_OVER);
             timer.gameOver();
+            broker.notifyObservers(EnumAddressName.All, EnumRequest.GAME_OVER);
         }
     }
 
     public void changeDirection(EnumDirection direction)
     {
-        switch(direction)
+        if(movementCheck)
         {
-            case UP:
-                if(this.direction != EnumDirection.DOWN)
-                {
-                    this.direction = direction;
-                }
-                break;
+            switch(direction)
+            {
+                case UP:
+                    if(this.direction != EnumDirection.DOWN)
+                    {
+                        this.direction = direction;
+                        movementCheck = false;
+                    }
+                    break;
 
-            case DOWN:
-                if(this.direction != EnumDirection.UP)
-                {
-                    this.direction = direction;
-                }
-                break;
+                case DOWN:
+                    if(this.direction != EnumDirection.UP)
+                    {
+                        this.direction = direction;
+                        movementCheck = false;
+                    }
+                    break;
 
-            case RIGTH:
-                if(this.direction != EnumDirection.LEFT)
-                {
-                    this.direction = direction;
-                }
-                break;
+                case RIGTH:
+                    if(this.direction != EnumDirection.LEFT)
+                    {
+                        this.direction = direction;
+                        movementCheck = false;
+                    }
+                    break;
 
-            case LEFT:
-                if(this.direction != EnumDirection.RIGTH)
-                {
-                    this.direction = direction;
-                }
-                break;
+                case LEFT:
+                    if(this.direction != EnumDirection.RIGTH)
+                    {
+                        this.direction = direction;
+                        movementCheck = false;
+                    }
+                    break;
+            }
         }
+
     }
 
     private Point foodCoordinateCalculate()
@@ -167,6 +180,7 @@ public class GameModel implements IObserver
                 if(a.equals(foodCoordinate))
                 {
                     coincidence = true;
+                    break;
                 }
                 else
                 {
@@ -187,6 +201,7 @@ public class GameModel implements IObserver
 
     public void snakeMovement()
     {
+        movementCheck = true;
         switch(direction)
         {
             case UP:
